@@ -1,0 +1,21 @@
+# Node modules (phòng trường hợp ai đó xóa root .gitignore)
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Build (nếu bạn build backend ra thư mục riêng)
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
