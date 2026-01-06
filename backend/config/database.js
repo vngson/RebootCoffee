@@ -20,23 +20,20 @@ const connectDB = async () => {
 
 const createDefaultAdmin = async () => {
   const User = require('../models/User');
-  const bcrypt = require('bcrypt');
   
   const adminExists = await User.findOne({ email: process.env.DEFAULT_ADMIN_EMAIL });
   
   if (!adminExists) {
-    const hashedPassword = await bcrypt.hash(
-      process.env.DEFAULT_ADMIN_PASSWORD,
-      parseInt(process.env.BCRYPT_SALT_ROUNDS)
-    );
-    
     await User.create({
       email: process.env.DEFAULT_ADMIN_EMAIL,
-      password: hashedPassword,
+      password: process.env.DEFAULT_ADMIN_PASSWORD,  // Plain text, let pre('save') hash
       name: 'Super Admin',
       role: 'admin',
       isActive: true
     });
+
+    console.log('Default admin password:', process.env.DEFAULT_ADMIN_PASSWORD);
+    console.log('Default admin email:', process.env.DEFAULT_ADMIN_EMAIL);
     
     console.log('Default admin user created');
   }
