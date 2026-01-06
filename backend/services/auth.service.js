@@ -4,20 +4,16 @@ const AccessLog = require('../models/AccessLog');
 
 class AuthService {
   async login(email, password, ipAddress, userAgent) {
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-
-    if (!user.isActive) {
-      throw new Error('Account is deactivated');
-    }
-
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
-    }
+    const user = await User.findOne({ email: email.toLowerCase() });
+    console.log('User found:', user ? user.email : 'null');
+    if (!user) throw new Error('Invalid credentials');
+    console.log('User active:', user.isActive);
+    if (!user.isActive) throw new Error('Account inactive');
+    console.log('Input password length:', password.length);
+    console.log('DB hash starts with:', user.password.substring(0, 10) + '...');
+    const isMatch = await user.comparePassword(password);
+    console.log('Password match:', isMatch);
+    if (!isMatch) throw new Error('Invalid credentials');
 
     user.lastLogin = new Date();
     await user.save();
